@@ -1,0 +1,74 @@
+﻿@page
+@using DaoVietAnh.Asm2.Repo.DTO
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<style>
+    .custom-margin {
+        margin-right: 1rem; /* Adjust the value as needed */
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="text-center">
+    <h1 class="display-5">Our Offers</h1>
+    <div class="container mt-5">
+        @{
+            var pizzas = ViewData["Pizzas"];
+            if (pizzas == null)
+            {
+                <div> Loading</div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var pizza in (List<PizzaDTO>)ViewData["Pizzas"]!)
+                    {
+
+                        <div class="card custom-margin" style="width: 16rem; ">
+                            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top mt-2" alt="...">
+                            <div class="card-body">
+                                <h3 class="card-title mb-1">@pizza.Name</h3>
+                                <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
+                                <h5 class="card-subtitle mb-1">$@pizza.Price</h5>
+                                <p class="card-text mb-1">@pizza.Description</p>
+                                @{
+                                    if (HttpContext.Session.GetString("user") == null)
+                                    {
+                                        <a href="/Account/Login" class="btn btn-primary align-text-bottom">Add to cart</a>
+                                    }
+                                    else{
+                                        <a href="" class="btn btn-primary align-text-bottom">Add to cart</a>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            }
+        }
+    </div>
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if (Model.PageNumber > 1)
+            {
+                <li class="page-item"><a class="page-link" href="?pageNumber=@(Model.PageNumber - 1)">Previous</a></li>
+            }
+
+            @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.PageSize); i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")"><a class="page-link" href="?pageNumber=@i">@i</a></li>
+            }
+
+            @if (Model.PageNumber < Math.Ceiling(Model.TotalCount / (double)Model.PageSize))
+            {
+                <li class="page-item"><a class="page-link" href="?pageNumber=@(Model.PageNumber + 1)">Next</a></li>
+            }
+        </ul>
+    </nav>
+</div>
