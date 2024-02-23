@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DaoVietAnh.Asm2.Repo.Parameters
+namespace DaoVietAnh.Asm2.Repo.Entities.Parameters
 {
-    public class PizzaServicePageConfig
+    public class PizzaServicePagingParameters
     {
         public int PageNumber { get; set; }
-        public int PageSize { get; set; }   
+        public int PageSize { get; set; }
     }
 }

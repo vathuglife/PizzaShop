@@ -1,7 +1,7 @@
 ﻿using DaoVietAnh.Asm2.Repo.DAL;
 using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Entities;
-using DaoVietAnh.Asm2.Repo.Parameters;
+using DaoVietAnh.Asm2.Repo.Entities.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +15,12 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation
         private IEnumerable<Product>? _pizzas;
         private List<PizzaDTO>? _pizzasDTO;  
         private UnitOfWork? _unitOfWork;
-        private PizzaServicePageConfig? _pageConfig;
+        private PizzaServicePagingParameters? _pageConfig;
         public PizzaService()
         {
             InitializeObjects();
         }
-        public Task<List<PizzaDTO>> GetAllPizzas(PizzaServicePageConfig pageConfig)
+        public Task<List<PizzaDTO>> GetAllPizzas(PizzaServicePagingParameters pageConfig)
         {
             return Task.Run(() =>
             {

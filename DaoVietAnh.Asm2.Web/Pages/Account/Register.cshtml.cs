@@ -1,6 +1,7 @@
 using DaoVietAnh.Asm2.Repo.Constants;
+using DaoVietAnh.Asm2.Repo.Constants.Enums;
 using DaoVietAnh.Asm2.Repo.DAL;
-using DaoVietAnh.Asm2.Repo.Results;
+using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Services;
 using DaoVietAnh.Asm2.Repo.Utils;
 
@@ -26,7 +27,7 @@ public class RegisterModel : PageModel
 
 
     private readonly IAccountService _accountService;
-    private Dictionary<AccountServiceResult, Action>? _registerAccountCases;
+    private Dictionary<AccountServiceEnum, Action>? _registerAccountCases;
     public RegisterModel(IAccountService accountService)
     {
         _accountService = accountService;
@@ -35,22 +36,22 @@ public class RegisterModel : PageModel
     }
     public void OnPost()
     {
-        var result =
-        _accountService.Register(new Repo.DTO.RegisterCredentialsDTO
+        var accountServiceResult =
+        _accountService.Register(new RegisterCredentialsDTO
         {
             Name = Name,
             Password = Password,
             Username = Username
         });
-        _registerAccountCases?.First(kvp => kvp.Key == result).Value();
+        _registerAccountCases?.First(kvp => kvp.Key == accountServiceResult.Result).Value();
     }
     private void InitializeObjects()
     {
-        _registerAccountCases = new Dictionary<AccountServiceResult, Action>
+        _registerAccountCases = new Dictionary<AccountServiceEnum, Action>
         {
-            { AccountServiceResult.INVALID_CREDENTIALS,() => ShowInvalidRegisterCredentialsPopup() } ,
-            { AccountServiceResult.USERNAME_DUPLICATED,() => ShowUsernameDuplicatedPopup() } ,
-            { AccountServiceResult.SUCCESS,() => ShowSuccessfulRegisterPopup() }
+            { AccountServiceEnum.INVALID_CREDENTIALS,() => ShowInvalidRegisterCredentialsPopup() } ,
+            { AccountServiceEnum.USERNAME_DUPLICATED,() => ShowUsernameDuplicatedPopup() } ,
+            { AccountServiceEnum.SUCCESS,() => ShowSuccessfulRegisterPopup() }
         };
     }
     private void ShowInvalidRegisterCredentialsPopup()
@@ -63,11 +64,10 @@ public class RegisterModel : PageModel
         PopupMsg = RegisterMessageResults.USERNAME_DUPLICATED;
         ShowPopup = true;
     }
-    private void ShowSuccessfulRegisterPopup()
+    private IActionResult ShowSuccessfulRegisterPopup()
     {
         PopupMsg = RegisterMessageResults.SUCCESS;
         ShowPopup = true;
+        return Redirect("/Account/Login");
     }
-
-
 }

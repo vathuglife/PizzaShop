@@ -1,0 +1,41 @@
+﻿@page
+@model DaoVietAnh.Asm2.Web.Pages.Pizza.DetailsModel
+@{
+}
+
+<h1>SelectedPizza Details</h1>
+
+
+<body>
+      <!-- Product section-->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+                <div class="col-md-6">                    
+                    <h1 class="display-5 fw-bolder">@Model.SelectedPizza?.Name</h1>
+                    <div class="fs-5 mb-5">                        
+                        <span>$@Model.SelectedPizza?.Price</span>
+                    </div>
+                    <p class="lead">
+                        @Model.SelectedPizza?.Description
+                    </p>
+                    <div class="d-flex">
+                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />                        
+                        @{
+                            if (HttpContext.Session.GetString("account") == null)
+                            {
+                                <a href="/Account/Login" class="btn btn-primary align-text-bottom">Add to cart</a>
+                            }
+                            else
+                            {
+                                <a href="" class="btn btn-primary align-text-bottom">Add to cart</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>       
+</body>
+

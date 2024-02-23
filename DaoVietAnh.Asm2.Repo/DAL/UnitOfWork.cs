@@ -87,7 +87,7 @@ namespace DaoVietAnh.Asm2.Repo.DAL
                 return _supplierRepository;
             }
             set => _supplierRepository = value; }
-
+        
         public void Save()
         {
             _dbContext?.SaveChanges();

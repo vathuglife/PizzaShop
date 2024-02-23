@@ -1,5 +1,7 @@
 ﻿@page
 @using DaoVietAnh.Asm2.Repo.DTO
+@using Newtonsoft.Json
+
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -11,8 +13,10 @@
     }
 </style>
 
-<div class="text-center">
-    <h1 class="display-5">Our Offers</h1>
+<div class="mt-lg-5">
+    <div class="text-center">
+        <h1 class="display-5">Our Offers</h1>
+    </div>
     <div class="container mt-5">
         @{
             var pizzas = ViewData["Pizzas"];
@@ -25,50 +29,36 @@
                 <div class="row">
                     @foreach (var pizza in (List<PizzaDTO>)ViewData["Pizzas"]!)
                     {
-
+                        Dictionary<string, string> pizzaDict = new Dictionary<string, string> {
+                            { "selectedPizza", JsonConvert.SerializeObject(pizza) }
+                        };
                         <div class="card custom-margin" style="width: 16rem; ">
                             <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top mt-2" alt="...">
                             <div class="card-body">
                                 <h3 class="card-title mb-1">@pizza.Name</h3>
                                 <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
                                 <h5 class="card-subtitle mb-1">$@pizza.Price</h5>
-                                <p class="card-text mb-1">@pizza.Description</p>
-                                @{
-                                    if (HttpContext.Session.GetString("user") == null)
-                                    {
-                                        <a href="/Account/Login" class="btn btn-primary align-text-bottom">Add to cart</a>
-                                    }
-                                    else{
-                                        <a href="" class="btn btn-primary align-text-bottom">Add to cart</a>
-                                    }
-                                }
-
                             </div>
+                            <a asp-page="/Pizza/Details" asp-all-route-data="pizzaDict" class="btn btn-primary mb-2">Details</a>
                         </div>
-
+                        
                     }
 
                 </div>
             }
         }
     </div>
-    <!-- Pagination -->
-    <nav aria-label="Page navigation">
+    <div class="mb-5">
         <ul class="pagination">
-            @if (Model.PageNumber > 1)
+            @for (var i = 1; i <= Model.TotalCount; i++)
             {
-                <li class="page-item"><a class="page-link" href="?pageNumber=@(Model.PageNumber - 1)">Previous</a></li>
-            }
 
-            @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.PageSize); i++)
-            {
-                <li class="page-item @(i == Model.PageNumber ? "active" : "")"><a class="page-link" href="?pageNumber=@i">@i</a></li>
-            }
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="?pageNumber=@i">@i</a>
+                </li>
 
-            @if (Model.PageNumber < Math.Ceiling(Model.TotalCount / (double)Model.PageSize))
-            {
-                <li class="page-item"><a class="page-link" href="?pageNumber=@(Model.PageNumber + 1)">Next</a></li>
             }
         </ul>
-    </nav>
+    </div>
+
 </div>

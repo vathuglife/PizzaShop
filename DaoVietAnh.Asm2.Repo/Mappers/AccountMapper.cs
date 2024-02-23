@@ -26,5 +26,20 @@ namespace DaoVietAnh.Asm2.Repo.Mappers
                             => option.MapFrom(source => source.Password))
             );
         }
+        public static MapperConfiguration AccountToAcountDTOMap()
+        {
+            return new MapperConfiguration(config =>
+               config.CreateMap<Account, AccountDTO>()
+               .ForMember(destination => destination.FullName,
+                       option
+                           => option.MapFrom(source => source.FullName))
+               .ForMember(destination => destination.UserName,
+                       option
+                           => option.MapFrom(source => source.UserName))
+                .ForMember(destination => destination.Type,
+                    option
+                        => option.MapFrom(source => source.Type))
+           );
+        }
     }
 }

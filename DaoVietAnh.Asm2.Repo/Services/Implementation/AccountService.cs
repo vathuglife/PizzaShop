@@ -1,5 +1,6 @@
-﻿using DaoVietAnh.Asm2.Repo.DTO;
-using DaoVietAnh.Asm2.Repo.Results;
+﻿using DaoVietAnh.Asm2.Repo.Constants.Enums;
+using DaoVietAnh.Asm2.Repo.DTO;
+using DaoVietAnh.Asm2.Repo.Entities.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,21 +18,18 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation
             InitializeObjects();
         }
         public AccountServiceResult Register(RegisterCredentialsDTO registerCredentials)
-        {            
+        {
             return _registerService!.CreateNewAccount(registerCredentials);
         }
         public AccountServiceResult Login(LoginCredentialsDTO loginCredentials)
         {
             return _loginService!.Login(loginCredentials);
         }
-        public AccountServiceResult Logout()
-        {
-            return AccountServiceResult.SUCCESS;
-        }
+
         private void InitializeObjects()
         {
             _registerService = new RegisterService();
             _loginService = new LoginService();
-        }
+        }      
     }
 }

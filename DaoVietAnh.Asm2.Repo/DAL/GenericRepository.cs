@@ -46,8 +46,7 @@ namespace DaoVietAnh.Asm2.Repo.DAL
         public virtual TEntity GetByID(object id)
         {
             return dbSet.Find(id)!;
-        }
-
+        }       
         public virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
@@ -73,5 +72,6 @@ namespace DaoVietAnh.Asm2.Repo.DAL
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
+       
     }
 }

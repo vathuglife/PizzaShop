@@ -10,8 +10,8 @@ namespace DaoVietAnh.Asm2.Repo.DTO
     {
         public string? Name { get; set; }
         public string? Category { get; set; }
-        public string? Description { get; set; } = null;
+        public string? Description { get; set; } 
         public Decimal? Price { get; set; }
-
+        
     }
 }

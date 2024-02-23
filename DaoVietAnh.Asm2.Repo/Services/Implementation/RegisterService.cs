@@ -1,8 +1,10 @@
-﻿using DaoVietAnh.Asm2.Repo.DAL;
+﻿using DaoVietAnh.Asm2.Repo.Constants;
+using DaoVietAnh.Asm2.Repo.Constants.Enums;
+using DaoVietAnh.Asm2.Repo.DAL;
 using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Entities;
+using DaoVietAnh.Asm2.Repo.Entities.Results;
 using DaoVietAnh.Asm2.Repo.Mappers;
-using DaoVietAnh.Asm2.Repo.Results;
 using DaoVietAnh.Asm2.Repo.Utils;
 
 
@@ -22,12 +24,12 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation
         {
             _registerCredentials = registerCredentials;
             if (!AreRegisterCredentialsValid())
-                return AccountServiceResult.INVALID_CREDENTIALS;
+                return GetInvalidCredentialsServiceResult();
             if (IsUsernameDuplicated())
-                return AccountServiceResult.USERNAME_DUPLICATED;
+                return GetUsernameDuplicatedServiceResult();
             MapRegisterCredentialsToAccount();
             AddNewAccountToDatabase();
-            return AccountServiceResult.SUCCESS;
+            return GetSuccessServiceResult();
         }
 
 
@@ -56,14 +58,53 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation
         }
         private void MapRegisterCredentialsToAccount()
         {
+            int accountId = GetLatestAccountId();
             _account = _accountMapper?.Map<Account>(_registerCredentials);
             _account!.Password = PasswordUtils.GetHashedPwd(_registerCredentials?.Password!);
             _account!.Type = "0";
+            _account.AccountId = accountId;
+            
         }
         private void AddNewAccountToDatabase()
-        {
+        {            
             _unitOfWork?.AccountRepository!.Insert(_account!);
             _unitOfWork?.Save();
+        }
+        private int GetLatestAccountId()
+        {
+            Account latestAccount = _unitOfWork?.AccountRepository?
+                .Get()
+                .OrderByDescending(account => account.AccountId)
+                .FirstOrDefault()!;
+            if(latestAccount==null) return 0;
+            int latestAccountId = latestAccount.AccountId + 1;
+            return latestAccountId;
+        }
+        private AccountServiceResult GetInvalidCredentialsServiceResult()
+        {
+
+            return new AccountServiceResult()
+            {
+                Result = AccountServiceEnum.INVALID_CREDENTIALS,
+                Message = LoginMessageResults.INVALID_CREDENTIALS
+            };
+        }
+        private AccountServiceResult GetUsernameDuplicatedServiceResult()
+        {
+
+            return new AccountServiceResult()
+            {
+                Result = AccountServiceEnum.USERNAME_DUPLICATED,
+                Message = RegisterMessageResults.USERNAME_DUPLICATED
+            };
+        }
+        private AccountServiceResult GetSuccessServiceResult()
+        {
+            return new AccountServiceResult()
+            {
+                Result = AccountServiceEnum.SUCCESS,
+                Message = RegisterMessageResults.SUCCESS,                
+            };
         }
 
     }

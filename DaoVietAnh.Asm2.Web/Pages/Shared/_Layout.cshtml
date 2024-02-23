@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using DaoVietAnh.Asm2.Repo.DTO
+@using Newtonsoft.Json
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,8 +11,8 @@
     <link rel="stylesheet" href="~/DaoVietAnh.Asm2.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="fixed-top">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow fixed-top mb-5">
             <div class="container">
                 <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">🍕 Pizza Shop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -27,26 +29,29 @@
             </div>
 
             @{
-                string user = Context.Session.GetString("user")?.ToString()!;
-                if (user == null)
+
+                string account = Context.Session.GetString("account")!;
+
+                if (account == null)
                 {
                     <div class="container d-flex justify-content-end">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Login</a>
-                                </li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Login</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Register</a>
                             </li>
-                            </ul>
-                        
+                        </ul>
+
                     </div>
                 }
                 else
                 {
+                    AccountDTO accountDTO = JsonConvert.DeserializeObject<AccountDTO>(account)!;
                     <div class="container d-flex justify-content-end">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item mr-1">Welcome back <div /> @user</li>
+                            <li class="nav-item mr-1">Welcome back <div /> @accountDTO.FullName</li>
                             <li class="nav-item">
                                 <a class="btn btn-primary" asp-page="/Account/Logout">Logout</a>
                             </li>

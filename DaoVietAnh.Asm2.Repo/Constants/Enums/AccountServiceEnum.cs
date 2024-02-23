@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DaoVietAnh.Asm2.Repo.Results
+namespace DaoVietAnh.Asm2.Repo.Constants.Enums
 {
-    public enum AccountServiceResult
+    public enum AccountServiceEnum
     {
         SUCCESS, USERNAME_DUPLICATED, INVALID_CREDENTIALS
     }
