@@ -21,9 +21,9 @@ namespace DaoVietAnh.Asm2.Repo.Mappers
                 .ForMember(destination => destination.UserName,
                         option
                             => option.MapFrom(source => source.Username))
-                    .ForMember(destination => destination.Password,
-                        option
-                            => option.MapFrom(source => source.Password))
+                .ForMember(destination => destination.Password,
+                    option
+                        => option.MapFrom(source => source.Password))
             );
         }
         public static MapperConfiguration AccountToAcountDTOMap()

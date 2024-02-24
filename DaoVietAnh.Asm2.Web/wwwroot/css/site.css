@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.custom-margin {
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
+.margin-top-from-navbar {
+    margin-top: 5rem;
+}

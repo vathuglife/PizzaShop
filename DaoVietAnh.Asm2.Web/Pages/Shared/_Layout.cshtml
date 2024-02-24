@@ -1,5 +1,10 @@
 ﻿@using DaoVietAnh.Asm2.Repo.DTO
+
 @using Newtonsoft.Json
+@{
+    AccountDTO? accountDTO = null!;
+    GetLoggedInAccount();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,19 +25,40 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Hottest Pizzas</a>
-                        </li>
-                    </ul>
+
+                    @if (IsGuest() || IsMember())
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Hottest Pizzas</a>
+                            </li>
+                        </ul>
+                    }
+                    else if (IsStaff())
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Hottest Pizzas</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pizza
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="/Pizza/Create">Create Pizza</a>
+                                    <a class="dropdown-item" href="/Pizza/Manage">Manage Pizzas</a>                                    
+                                </div>
+                            </li>
+                        </ul>
+                       
+                    }
+
+
                 </div>
             </div>
 
             @{
-
-                string account = Context.Session.GetString("account")!;
-
-                if (account == null)
+                if (accountDTO == null)
                 {
                     <div class="container d-flex justify-content-end">
                         <ul class="navbar-nav ml-auto">
@@ -48,7 +74,6 @@
                 }
                 else
                 {
-                    AccountDTO accountDTO = JsonConvert.DeserializeObject<AccountDTO>(account)!;
                     <div class="container d-flex justify-content-end">
                         <ul class="nav navbar-nav navbar-right">
                             <li class="nav-item mr-1">Welcome back <div /> @accountDTO.FullName</li>
@@ -77,7 +102,35 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@{
+    void GetLoggedInAccount()
+    {
+        string accountFromSession = Context.Session.GetString("account")!;
+        if (accountFromSession != null)
+            accountDTO = JsonConvert.DeserializeObject<AccountDTO>(accountFromSession)!;
+    }
+    bool IsStaff()
+    {
+        if (accountDTO != null && accountDTO.Type!.Equals("1")) return true;
+        return false;
+    }
+    bool IsMember()
+    {
+        if (accountDTO != null && accountDTO.Type!.Equals("0")) return true;
+        return false;
+    }
+    bool IsGuest()
+    {
+        if (accountDTO == null) return true;
+        return false;
+    }
+
+}

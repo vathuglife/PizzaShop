@@ -6,18 +6,13 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<style>
-    .custom-margin {
-        margin-right: 1rem; /* Adjust the value as needed */
-        margin-top: 1rem;
-    }
-</style>
 
-<div class="mt-lg-5">
+
+<div class="container margin-top-from-navbar">
     <div class="text-center">
         <h1 class="display-5">Our Offers</h1>
     </div>
-    <div class="container mt-5">
+    <div>
         @{
             var pizzas = ViewData["Pizzas"];
             if (pizzas == null)
@@ -28,31 +23,31 @@
             {
                 <div class="row">
                     @foreach (var pizza in (List<PizzaDTO>)ViewData["Pizzas"]!)
-                    {
-                        Dictionary<string, string> pizzaDict = new Dictionary<string, string> {
-                            { "selectedPizza", JsonConvert.SerializeObject(pizza) }
-                        };
-                        <div class="card custom-margin" style="width: 16rem; ">
-                            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top mt-2" alt="...">
-                            <div class="card-body">
-                                <h3 class="card-title mb-1">@pizza.Name</h3>
-                                <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
-                                <h5 class="card-subtitle mb-1">$@pizza.Price</h5>
+                    {                        
+                            <div class="card custom-margin" style="width: 16rem; height:25rem">
+                                <img src="@pizza.Image" width="500" height="200" class="card-img-top mt-2"  alt="...">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-1">@pizza.Name</h3>
+                                    <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
+                                    <h5 class="card-subtitle mb-1">$@pizza.Price</h5>
+                                </div>
+                                <form method="post" asp-page-handler="ShowDetails">
+                                    <input type="hidden" name="pizzaId" value="@pizza.Id" />
+                                    <button class="btn btn-primary mb-2" type="submit">Details</button>
+                            </form>
                             </div>
-                            <a asp-page="/Pizza/Details" asp-all-route-data="pizzaDict" class="btn btn-primary mb-2">Details</a>
-                        </div>
                         
+
                     }
 
                 </div>
             }
         }
     </div>
-    <div class="mb-5">
+    <div class="mt-5">
         <ul class="pagination">
             @for (var i = 1; i <= Model.TotalCount; i++)
             {
-
                 <li class="page-item @(i == Model.PageNumber ? "active" : "")">
                     <a class="page-link" href="?pageNumber=@i">@i</a>
                 </li>
@@ -62,3 +57,5 @@
     </div>
 
 </div>
+
+

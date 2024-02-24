@@ -1,6 +1,7 @@
 ﻿using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Entities;
-using DaoVietAnh.Asm2.Repo.Entities.Parameters;
+using DaoVietAnh.Asm2.Repo.Payload.Request;
+using DaoVietAnh.Asm2.Repo.Payload.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace DaoVietAnh.Asm2.Repo.Services
 {
     public interface IPizzaService
     {
-        Task<List<PizzaDTO>> GetAllPizzas(PizzaServicePagingParameters pageConfig);
+        Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingParameters pageConfig);
+        PizzaServiceResponse GetPizzaById(int id);    
+        PizzaServiceResponse Insert(NewPizzaDTO newPizzaDTO);
+
     }
 }

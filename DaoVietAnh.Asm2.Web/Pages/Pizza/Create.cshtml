@@ -1,0 +1,87 @@
+﻿@page
+@model DaoVietAnh.Asm2.Web.Pages.Pizza.CreateModel
+@{
+}
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <form method="post">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">                    
+                    <div id="imageContainer">
+                        <img id="imagePreview" src="/resources/images/add-image.png" alt="Preview" style="max-width: 380px; max-height: 380px;" />
+                    </div>
+                    <input type="file" id="Image" class="form-control-file" accept="image/*" onchange="previewImage(this)" style="display: none;" />
+                    <button type="button" class="btn btn-secondary" onclick="$('#Image').click()">Choose Image</button>
+                    <input asp-for ="@Model.Pizza!.ProductImage" type="hidden" id="ImageData" />
+                </div>
+                
+                <div class="col-md-6 scrollable-div overflow-auto">
+                    <h1 class="display-5 mb-3">Pizza Details</h1>
+                    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Name</div>
+                        <input asp-for="@Model.Pizza!.Name" class="form-control text-left me-3" type="text" />
+                    </div>
+                   
+                    
+                 @*    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Description</div>
+                        <input class="form-control text-left me-3" asp-for="@Model.Pizza!.Description" type="text" />
+                    </div> *@
+                    
+                    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Category</div>
+                        <select asp-for="@Model.Pizza!.CategoryId" class="form-select">
+                            @foreach(var category in Model.Categories!)
+                            {
+                                <option value="@category.CategoryId">@category.CategoryName</option>
+                            }
+                        </select>                        
+                    </div>
+                    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Supplier</div>
+                        <select class="form-select" asp-for="@Model.Pizza!.SupplierId">
+                            @foreach (var supplier in Model.Suppliers!)
+                            {
+                                <option value="@supplier.SupplierId">@supplier.CompanyName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="fs-5 mb-2">
+                        <div class="d-inline-block">
+                            <div class="fw-bold">Quantity Per Unit</div>
+                            <input asp-for="@Model.Pizza!.QuantityPerUnit" class="form-control text-middle me-2 d-inline-block" maxlength="1" id="inputQuantity" type="number" style="max-width:3rem" />
+                            <div class="d-inline-block">Piece(s)</div>
+                        </div>
+                        <div class="ms-5 d-inline-block">
+                            <div class="fw-bold">Price</div>
+                            <div class="d-inline-block">$</div>
+                            <input asp-for="@Model.Pizza!.UnitPrice" class="form-control text-middle me-2 d-inline-block" min="0" maxlength="3" id="inputQuantity" type="number" step=".01" style="max-width:6rem" />
+                        </div>
+                    </div>
+                    <div class="fs-5 mb-2">
+                                                
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary align-text-bottom width"
+                                type="submit" >
+                            Create
+                        </button>
+                    </div>                           
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imagePreview').attr('src', e.target.result).show();
+                $('#ImageData').val(e.target.result); // Set image data to hidden input
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

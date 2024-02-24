@@ -1,5 +1,8 @@
 using DaoVietAnh.Asm2.Repo.Services;
-using DaoVietAnh.Asm2.Repo.Services.Implementation;
+using DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl;
+using DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl;
+using DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl;
+using DaoVietAnh.Asm2.Repo.Services.Implementation.SupplierServiceImpl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IPizzaService, PizzaService>();
+builder.Services.AddScoped<ISupplierService,SupplierService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

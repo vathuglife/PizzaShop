@@ -1,7 +1,7 @@
-using DaoVietAnh.Asm2.Repo.Constants;
 using DaoVietAnh.Asm2.Repo.Constants.Enums;
+using DaoVietAnh.Asm2.Repo.Constants.MessageResults;
 using DaoVietAnh.Asm2.Repo.DTO;
-using DaoVietAnh.Asm2.Repo.Entities.Results;
+using DaoVietAnh.Asm2.Repo.Payload.Response;
 using DaoVietAnh.Asm2.Repo.Services;
 
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace DaoVietAnh.Asm2.Web.Pages.Account
         public string? PopupMsg { get; set; }
         private readonly IAccountService _accountService;
         private Dictionary<AccountServiceEnum, Action>? _loginAccountCases;
-        private AccountServiceResult? _accountServiceResult;
+        private AccountServiceResponse? _accountServiceResult;
         public LoginModel(IAccountService accountService)
         {
             _accountService = accountService;

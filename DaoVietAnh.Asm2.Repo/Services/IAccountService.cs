@@ -1,6 +1,6 @@
 ﻿using DaoVietAnh.Asm2.Repo.Constants.Enums;
 using DaoVietAnh.Asm2.Repo.DTO;
-using DaoVietAnh.Asm2.Repo.Entities.Results;
+using DaoVietAnh.Asm2.Repo.Payload.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace DaoVietAnh.Asm2.Repo.Services
 {
     public interface IAccountService
     {
-        public AccountServiceResult Register(RegisterCredentialsDTO registerCredentials);
-        public AccountServiceResult Login(LoginCredentialsDTO loginCredentials);        
+        public AccountServiceResponse Register(RegisterCredentialsDTO registerCredentials);
+        public AccountServiceResponse Login(LoginCredentialsDTO loginCredentials);        
     }
 }
