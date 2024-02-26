@@ -24,18 +24,18 @@
                 <div class="row">
                     @foreach (var pizza in (List<PizzaDTO>)ViewData["Pizzas"]!)
                     {                        
-                            <div class="card custom-margin" style="width: 16rem; height:25rem">
-                                <img src="@pizza.Image" width="500" height="200" class="card-img-top mt-2"  alt="...">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-1">@pizza.Name</h3>
-                                    <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
-                                    <h5 class="card-subtitle mb-1">$@pizza.Price</h5>
-                                </div>
-                                <form method="post" asp-page-handler="ShowDetails">
-                                    <input type="hidden" name="pizzaId" value="@pizza.Id" />
-                                    <button class="btn btn-primary mb-2" type="submit">Details</button>
-                            </form>
+                        <div class="card custom-margin" style="width: 16rem; height:25rem">
+                            <img src="@pizza.Image" width="500" height="200" class="card-img-top mt-2"  alt="...">
+                            <div class="card-body">
+                                <h3 class="card-title mb-1">@pizza.Name</h3>
+                                <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
+                                <h5 class="card-subtitle mb-1">$@pizza.Price</h5>
                             </div>
+                            <form method="post" asp-page-handler="ShowDetails">
+                                <input type="hidden" name="pizzaId" value="@pizza.Id" />
+                                <button class="btn btn-primary mb-2" type="submit">Details</button>
+                        </form>
+                        </div>
                         
 
                     }

@@ -13,8 +13,11 @@ namespace DaoVietAnh.Asm2.Repo.Services
     public interface IPizzaService
     {
         Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingParameters pageConfig);
-        PizzaServiceResponse GetPizzaById(int id);    
+        PizzaServiceResponse GetPizzaById(int id);
+        PizzaServiceResponse GetUpdatePizzaById(int id);
         PizzaServiceResponse Insert(NewPizzaDTO newPizzaDTO);
+        PizzaServiceResponse Update(UpdatePizzaDTO updatePizzaDTO);
+        PizzaServiceResponse Delete(int id);
 
     }
 }

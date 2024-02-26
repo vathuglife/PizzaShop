@@ -48,6 +48,49 @@ namespace DaoVietAnh.Asm2.Repo.Mappers
                 
                 .ForMember(destination => destination.Image, option => option.Ignore())
             );
-        }        
+        }
+        public static MapperConfiguration PizzaProductToUpdatePizzaDTO()
+        {
+            return new MapperConfiguration(config =>
+                config.CreateMap<Product, UpdatePizzaDTO>()
+                .ForMember(destination => destination.Id,
+                        option => option.MapFrom(source => source.ProductId))
+                .ForMember(destination => destination.Name,
+                        option => option.MapFrom(source => source.ProductName))
+                  .ForMember(destination => destination.SupplierId,
+                        option => option.MapFrom(source => source.SupplierId))
+                  //.ForMember(destination => destination.Description,
+                  //      option => option.Ignore())
+                  .ForMember(destination => destination.CategoryId,
+                        option => option.MapFrom(source => source.CategoryId))
+                  .ForMember(destination => destination.QuantityPerUnit,
+                        option => option.Ignore())
+                  .ForMember(destination => destination.UnitPrice,
+                        option => option.MapFrom(source => source.UnitPrice))
+                  .ForMember(destination => destination.ProductImage,
+                        option => option.Ignore())
+
+                );
+        }
+        public static MapperConfiguration UpdatePizzaDTOToPizzaProduct()
+        {
+            return new MapperConfiguration(config =>
+                config.CreateMap<UpdatePizzaDTO, Product>()
+                .ForMember(destination => destination.ProductId,
+                        option => option.Ignore())
+                .ForMember(destination => destination.ProductName,
+                        option => option.MapFrom(source => source.Name))
+                  .ForMember(destination => destination.SupplierId,
+                        option => option.MapFrom(source => source.SupplierId))                  
+                  .ForMember(destination => destination.CategoryId,
+                        option => option.MapFrom(source => source.CategoryId))
+                  .ForMember(destination => destination.QuantityPerUnit,
+                        option => option.MapFrom(source => source.QuantityPerUnit))
+                  .ForMember(destination => destination.UnitPrice,
+                        option => option.MapFrom(source => source.UnitPrice))
+                  .ForMember(destination => destination.ProductImage,
+                        option => option.Ignore())
+                );
+        }
     }
 }

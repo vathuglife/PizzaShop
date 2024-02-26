@@ -73,21 +73,6 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
             int latestPizzaId = latestPizza.ProductId + 1;
             return latestPizzaId;
         }
-
-        private int GetCategoryIdByCategoryName(string categoryName)
-        {
-            Category category = _unitOfWork!.CategoryRepository!
-                .Get(category => category.CategoryName == categoryName)
-                .FirstOrDefault()!;
-            return category.CategoryId;
-        }
-        private int GetSupplierIdBySupplierName(string supplierName)
-        {
-            Supplier supplier = _unitOfWork!.SupplierRepository!
-                .Get(supplier => supplier.CompanyName == supplierName)
-                .FirstOrDefault()!;
-            return supplier.SupplierId;
-        }
-
+       
     }
 }
