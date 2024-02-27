@@ -19,16 +19,18 @@ namespace DaoVietAnh.Asm2.Web.Pages.Account
         public string? Password { get; set; }        
         public bool ShowPopup { get; set; }        
         public string? PopupMsg { get; set; }
+        
         private readonly IAccountService _accountService;
         private Dictionary<AccountServiceEnum, Action>? _loginAccountCases;
         private AccountServiceResponse? _accountServiceResult;
+        private string? _endpoint;
         public LoginModel(IAccountService accountService)
         {
             _accountService = accountService;
             InitializeObjects();
         }
 
-        public void OnPost()
+        public IActionResult OnPost()
         {
             _accountServiceResult = _accountService.Login(new LoginCredentialsDTO
             {
@@ -37,7 +39,7 @@ namespace DaoVietAnh.Asm2.Web.Pages.Account
             });
             _loginAccountCases?.First(kvp => kvp.Key == _accountServiceResult.Result)
                 .Value();
-
+            return RedirectToPage(_endpoint);
         }
 
         private void InitializeObjects()
@@ -52,15 +54,16 @@ namespace DaoVietAnh.Asm2.Web.Pages.Account
         {
             PopupMsg = LoginMessageResults.INVALID_CREDENTIALS;
             ShowPopup = true;
+            _endpoint = "/Account/Login";
         }
-        public IActionResult HandleSuccessfulLogin()
+        public void HandleSuccessfulLogin()
         {
             HttpContext.Session.SetString("account", GetSerializedAccountDTO());
-            return RedirectToPage("/Index");
+            _endpoint = "/Index";
         }        
         private string GetSerializedAccountDTO()
         {            
-            return JsonConvert.SerializeObject((AccountDTO)_accountServiceResult!.ReturnData!);
+            return JsonConvert.SerializeObject((AccountDTO)_accountServiceResult!.ReturnData!);            
         }
     }
 }

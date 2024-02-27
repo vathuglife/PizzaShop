@@ -2,6 +2,8 @@ using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace DaoVietAnh.Asm2.Web.Pages.Pizza
 {
@@ -11,7 +13,7 @@ namespace DaoVietAnh.Asm2.Web.Pages.Pizza
         
         public List<CategoryDTO>? Categories { get; set; }
         public List<SupplierDTO>? Suppliers { get; set; }
-        public NewPizzaDTO? Pizza { get; set; }                
+        private NewPizzaDTO? _newPizzaDTO { get; set; }                
         private ICategoryService? _categoryService;
         private ISupplierService? _supplierService;
         private IPizzaService? _pizzaService;
@@ -28,11 +30,13 @@ namespace DaoVietAnh.Asm2.Web.Pages.Pizza
             GetCategories();
             GetSuppliers();
         }
-        public void OnPost()        
+        public IActionResult OnPostCreatePizza([FromBody] NewPizzaDTO newPizzaDTO)        
         {
-            _pizzaService!.Insert(Pizza!);
-        }
-       
+            _newPizzaDTO = newPizzaDTO;
+            _pizzaService!.Insert(_newPizzaDTO);
+            return RedirectToPage("/Pizza/Create");
+
+        }       
         private void GetCategories()
         {
             var categories = _categoryService!.GetCategories().ReturnData;
@@ -41,6 +45,6 @@ namespace DaoVietAnh.Asm2.Web.Pages.Pizza
         private void GetSuppliers()
         {
             Suppliers = _supplierService!.GetSuppliers();
-        }
+        }       
     }
 }
