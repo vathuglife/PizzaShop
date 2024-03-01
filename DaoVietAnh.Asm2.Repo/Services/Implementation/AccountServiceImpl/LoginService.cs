@@ -19,13 +19,14 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl
     public class LoginService
     {
         private LoginCredentialsDTO? _loginCredentials;
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private Account? _account;
         private AccountDTO? _accountDTO;
         private Mapper? _mapper;
 
-        public LoginService()
+        public LoginService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
 
@@ -40,7 +41,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl
         }
         private void InitializeObjects()
         {
-            _unitOfWork = new UnitOfWork();
+            
             _mapper = new Mapper(AccountMapper.AccountToAcountDTOMap());
         }
         private void GetAccountByUsername()

@@ -13,12 +13,13 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.SupplierServiceImpl
 {
     public class SupplierService : ISupplierService
     {
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private List<Supplier>? _suppliers;
         private List<SupplierDTO>? _supplierDTOs;
         private Mapper? _mapper;
-        public SupplierService()
+        public SupplierService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public List<SupplierDTO> GetSuppliers()
@@ -42,7 +43,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.SupplierServiceImpl
         }
         private void InitializeObjects()
         {
-            _unitOfWork = new UnitOfWork();
+            
             _mapper = new Mapper(SupplierMapper.SupplierToSupplierDTOMap());
             _supplierDTOs = new List<SupplierDTO>();
         }

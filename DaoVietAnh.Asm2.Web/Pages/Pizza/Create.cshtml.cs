@@ -2,8 +2,7 @@ using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
-using System.Diagnostics;
+
 
 namespace DaoVietAnh.Asm2.Web.Pages.Pizza
 {

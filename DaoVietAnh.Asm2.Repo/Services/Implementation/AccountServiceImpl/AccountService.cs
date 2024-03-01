@@ -1,4 +1,5 @@
 ﻿using DaoVietAnh.Asm2.Repo.Constants.Enums;
+using DaoVietAnh.Asm2.Repo.DAL;
 using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Payload.Response;
 using System;
@@ -13,8 +14,10 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl
     {
         private RegisterService? _registerService;
         private LoginService? _loginService;
-        public AccountService()
+        private IUnitOfWork _unitOfWork;
+        public AccountService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public AccountServiceResponse Register(RegisterCredentialsDTO registerCredentials)
@@ -28,8 +31,8 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl
 
         private void InitializeObjects()
         {
-            _registerService = new RegisterService();
-            _loginService = new LoginService();
+            _registerService = new RegisterService(_unitOfWork);
+            _loginService = new LoginService(_unitOfWork);
         }
     }
 }

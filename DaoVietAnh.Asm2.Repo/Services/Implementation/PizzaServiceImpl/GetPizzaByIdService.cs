@@ -16,12 +16,13 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
 {
     public class GetPizzaByIdService
     {
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private PizzaDTO? _pizzaDTO;
         private Product? _pizza;
         private Mapper? _mapper;
         private int _id;
-        public GetPizzaByIdService() {
+        public GetPizzaByIdService(IUnitOfWork unitOfWork) {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public PizzaServiceResponse GetById(int id)
@@ -41,11 +42,11 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
             _pizzaDTO = _mapper!.Map<PizzaDTO>(_pizza);
             _pizzaDTO.Category = category.CategoryName;
             _pizzaDTO.Description = category.Description;
-            _pizzaDTO.Image = ImageUtils.GetBase64ImageFromByteArray(_pizza.ProductImage!);
+            _pizzaDTO.Image = ImageUtils.GetBase64ImageFromByteArray(_pizza!.ProductImage!);
         }
         private void InitializeObjects()
         {
-            _unitOfWork = new UnitOfWork();
+            
             _mapper = new Mapper(PizzaMapper.PizzaProductToPizzaDTO());
         }
         private PizzaServiceResponse GetSuccessfulPizzaRetrievalResult()

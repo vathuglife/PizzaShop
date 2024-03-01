@@ -15,11 +15,12 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl
     public class InsertCategoryByNewPizzaDTOService
     {
         private NewPizzaDTO? _newPizzaDTO;
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private Category? _category;
         private Mapper? _categoryMapper;
-        public InsertCategoryByNewPizzaDTOService()
+        public InsertCategoryByNewPizzaDTOService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public void Insert(NewPizzaDTO newPizzaDTO)
@@ -31,8 +32,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl
       
         private void InitializeObjects()
         {
-            _categoryMapper = new Mapper(CategoryMapper.NewPizzaDTOToCategoryMap());
-            _unitOfWork = new UnitOfWork();
+            _categoryMapper = new Mapper(CategoryMapper.NewPizzaDTOToCategoryMap());            
         }
         
         private void MapNewPizzaDTOToCategory()

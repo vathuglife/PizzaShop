@@ -15,6 +15,20 @@ namespace DaoVietAnh.Asm2.Repo.Utils
             if (password == null) return false;
             return Regex.IsMatch(password,ValidationConstants.VALID_PASSWORD_REGEX);
         }
+        public static bool IsDecimal (string input)
+        {
+            decimal value;
+            if (Decimal.TryParse(input, out value))
+                return true;
+            return false;              
+        }
+        public static bool IsNumeric (string input)
+        {
+            int value;
+            if (Int32.TryParse(input, out value))
+                return true;
+            return false;
+        }
 
     }
 }

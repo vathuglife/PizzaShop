@@ -14,14 +14,16 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
 {
     public class UpdatePizzaService
     {
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private Mapper? _pizzaMapper;
         private UpdatePizzaDTO? _updatePizzaDTO;
         private Product? _pizza;
 
-        public UpdatePizzaService() { InitializeObjects(); }
+        public UpdatePizzaService(IUnitOfWork unitOfWork) { 
+            _unitOfWork = unitOfWork; InitializeObjects(); 
+        }
         public void Update(UpdatePizzaDTO updatePizzaDTO)
-        {            
+        {
             _updatePizzaDTO = updatePizzaDTO;
             GetPizzaProductFromDbById(); ;
             MapUpdatePizzaDTOToPizzaProduct();
@@ -31,7 +33,6 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
 
         private void InitializeObjects()
         {
-            _unitOfWork = new UnitOfWork();
             _pizzaMapper = new Mapper(PizzaMapper.UpdatePizzaDTOToPizzaProduct());
 
         }
@@ -86,7 +87,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
                 .Get(supplier => supplier.CompanyName == supplierName)
                 .FirstOrDefault()!;
             return supplier.SupplierId;
-        }       
+        }
     }
 }
 

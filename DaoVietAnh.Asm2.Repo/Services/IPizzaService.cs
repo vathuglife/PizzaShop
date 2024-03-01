@@ -12,7 +12,8 @@ namespace DaoVietAnh.Asm2.Repo.Services
 {
     public interface IPizzaService
     {
-        Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingParameters pageConfig);
+        Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingRequest pageConfig);
+        Task<PizzaServiceResponse> GetPizzasBy(GetPizzasByRequest getPizzaByRequest);
         PizzaServiceResponse GetPizzaById(int id);
         PizzaServiceResponse GetUpdatePizzaById(int id);
         PizzaServiceResponse Insert(NewPizzaDTO newPizzaDTO);

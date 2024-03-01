@@ -26,10 +26,7 @@ namespace DaoVietAnh.Asm2.Repo.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=(local); database=ShoppingWebsiteDB;uid=sa;pwd=1234567890;TrustServerCertificate=True");
-            }
+           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

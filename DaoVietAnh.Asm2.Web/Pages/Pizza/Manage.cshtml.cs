@@ -22,7 +22,7 @@ namespace DaoVietAnh.Asm2.Web.Pages.Pizza
         public async Task OnGet()
         {
             var result = await Task.Run(() =>
-                _pizzaService.GetAllPizzas(new PizzaServicePagingParameters()
+                _pizzaService.GetAllPizzas(new PizzaServicePagingRequest()
                 {
                     PageNumber = PageNumber,
                     PageSize = PageSize

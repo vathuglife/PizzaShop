@@ -9,9 +9,38 @@
 
 
 <div class="container margin-top-from-navbar">
-    <div class="text-center">
-        <h1 class="display-5">Our Offers</h1>
+    <div class="row mb-3">
+        <div class="col-3">
+            <div class="text-left">
+                <h1 class="display-5">Our Offers</h1>
+            </div>
+        </div>
+        <div class="justify-content-end">
+            <div class="container mt-3">
+                <form method="post">
+                    <div class="row">
+                        <div class="col-5">
+                            <input asp-for="@Model.GetPizzasByRequest!.Value" type="text" class="form-control" placeholder="Search for pizza...">
+                        </div>
+                        @* <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Search by...</button> *@
+                        <div class="col-3">
+                            <select asp-for="@Model.GetPizzasByRequest!.Option" class="form-select">
+                                <option value="NAME">Name</option>
+                                <option value="ID">ID</option>
+                                <option value="UNIT_PRICE">Unit Price</option>
+                            </select>
+                        </div>
+                        <div class="col-1">
+                            <button asp-page-handler="GetBy" class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
+
+
     <div>
         @{
             var pizzas = ViewData["Pizzas"];
@@ -23,9 +52,9 @@
             {
                 <div class="row">
                     @foreach (var pizza in (List<PizzaDTO>)ViewData["Pizzas"]!)
-                    {                        
+                    {
                         <div class="card custom-margin" style="width: 16rem; height:25rem">
-                            <img src="@pizza.Image" width="500" height="200" class="card-img-top mt-2"  alt="...">
+                            <img src="@pizza.Image" width="500" height="200" class="card-img-top mt-2" alt="...">
                             <div class="card-body">
                                 <h3 class="card-title mb-1">@pizza.Name</h3>
                                 <h6 class="card-subtitle mb-1">Category: @pizza.Category</h6>
@@ -34,9 +63,9 @@
                             <form method="post" asp-page-handler="ShowDetails">
                                 <input type="hidden" name="pizzaId" value="@pizza.Id" />
                                 <button class="btn btn-primary mb-2" type="submit">Details</button>
-                        </form>
+                            </form>
                         </div>
-                        
+
 
                     }
 

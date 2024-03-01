@@ -1,4 +1,5 @@
 ﻿using DaoVietAnh.Asm2.Repo.Constants.Enums;
+using DaoVietAnh.Asm2.Repo.DAL;
 using DaoVietAnh.Asm2.Repo.DTO;
 using DaoVietAnh.Asm2.Repo.Payload.Request;
 using DaoVietAnh.Asm2.Repo.Payload.Response;
@@ -19,15 +20,22 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
         private GetPizzaByIdService? _getPizzaByIdService;
         private DeletePizzaByIdService? _deletePizzaByIdService;
         private GetUpdatePizzaByIdService? _getUpdatePizzaByIdService;
-        private UpdatePizzaService? _updatePizzaService; 
+        private UpdatePizzaService? _updatePizzaService;
+        private GetPizzasByService? _getPizzasByService;    
+        private IUnitOfWork _unitOfWork;
 
-        public PizzaService()
+        public PizzaService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
-        public Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingParameters pageConfig)
+        public Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingRequest pageConfig)
         {
             return Task.Run(() => _getAllPizzaService!.GetAllPizzas(pageConfig));
+        }
+        public Task<PizzaServiceResponse> GetPizzasBy(GetPizzasByRequest getPizzaByRequest)
+        {
+            return Task.Run(() => _getPizzasByService!.GetBy(getPizzaByRequest));
         }
         public PizzaServiceResponse GetPizzaById(int id)
         {
@@ -37,6 +45,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
         {
             return _getUpdatePizzaByIdService!.Get(id);
         }
+        
         public PizzaServiceResponse Insert(NewPizzaDTO newPizzaDTO)
         {
             try
@@ -77,12 +86,13 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
         }
         private void InitializeObjects()
         {
-            _getAllPizzaService = new GetAllPizzaService();
-            _insertPizzaService = new InsertPizzaService();
-            _getPizzaByIdService = new GetPizzaByIdService();
-            _getUpdatePizzaByIdService = new GetUpdatePizzaByIdService();
-            _deletePizzaByIdService = new DeletePizzaByIdService();
-            _updatePizzaService = new UpdatePizzaService();
+            _getAllPizzaService = new GetAllPizzaService(_unitOfWork);
+            _insertPizzaService = new InsertPizzaService(_unitOfWork);
+            _getPizzaByIdService = new GetPizzaByIdService(_unitOfWork);
+            _getUpdatePizzaByIdService = new GetUpdatePizzaByIdService(_unitOfWork);
+            _deletePizzaByIdService = new DeletePizzaByIdService(_unitOfWork);
+            _updatePizzaService = new UpdatePizzaService(_unitOfWork);
+            _getPizzasByService = new GetPizzasByService(_unitOfWork);
         }
         private PizzaServiceResponse GetSuccessfulPizzaInsertResult()
         {

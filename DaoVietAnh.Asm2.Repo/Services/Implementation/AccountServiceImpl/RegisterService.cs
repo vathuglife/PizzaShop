@@ -15,9 +15,10 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl
         private RegisterCredentialsDTO? _registerCredentials;
         private Account? _account;
         private AutoMapper.Mapper? _accountMapper;
-        private UnitOfWork? _unitOfWork;
-        public RegisterService()
+        private IUnitOfWork? _unitOfWork;
+        public RegisterService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public AccountServiceResponse CreateNewAccount(RegisterCredentialsDTO registerCredentials)
@@ -34,8 +35,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl
 
 
         private void InitializeObjects()
-        {
-            _unitOfWork = new UnitOfWork();
+        {            
             _accountMapper =
                 new AutoMapper.Mapper(AccountMapper.RegisterCredentialsToAccountMap());
         }

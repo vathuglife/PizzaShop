@@ -1,71 +1,82 @@
 ﻿@page
 @model DaoVietAnh.Asm2.Web.Pages.Pizza.UpdateModel
+@using DaoVietAnh.Asm2.Repo.DTO
+@using Newtonsoft.Json
 @{
+    AccountDTO? accountDTO = null!;
+    GetLoggedInAccount();
 }
-<section class="py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <form method="post">
-            <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6">
-                    <div id="imageContainer">
-                        <img id="imagePreview" src="@Model.Pizza!.ProductImage" alt="Preview" style="max-width: 380px; max-height: 380px;" />
-                    </div>
-                    <input type="file" id="Image" class="form-control-file" accept="image/*" onchange="previewImage(this)" style="display: none;" />
-                    <button type="button" class="btn btn-secondary" onclick="$('#Image').click()">Choose Image</button>
-                    <input asp-for="@Model.Pizza!.ProductImage" type="hidden" id="ImageData" />
-                </div>
-
-                <div class="col-md-6 scrollable-div overflow-auto">
-                    <h1 class="display-5 mb-3">Update Pizza Details</h1>
-                    <div class="fs-5 mb-2">
-                        <div class="fw-bold">Name</div>
-                        <input asp-for="@Model.Pizza!.Name" class="form-control text-left me-3" type="text" />
+@if (IsStaff())
+{
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <form method="post">
+                <div class="row gx-4 gx-lg-5 align-items-center">
+                    <div class="col-md-6">
+                        <div id="imageContainer">
+                            <img id="imagePreview" src="@Model.Pizza!.ProductImage" alt="Preview" style="max-width: 380px; max-height: 380px;" />
+                        </div>
+                        <input type="file" id="Image" class="form-control-file" accept="image/*" onchange="previewImage(this)" style="display: none;" />
+                        <button type="button" class="btn btn-secondary" onclick="$('#Image').click()">Choose Image</button>
+                        <input asp-for="@Model.Pizza!.ProductImage" type="hidden" id="ImageData" />
                     </div>
 
-                   
-                    <div class="fs-5 mb-2">
-                        <div class="fw-bold">Category</div>
-                        <select asp-for="@Model.Pizza!.CategoryId" class="form-select">
-                            @foreach (var category in Model.Categories!)
-                            {
-                                <option value="@category.CategoryId">@category.CategoryName</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="fs-5 mb-2">
-                        <div class="fw-bold">Supplier</div>
-                        <select class="form-select" asp-for="@Model.Pizza!.SupplierId">
-                            @foreach (var supplier in Model.Suppliers!)
-                            {
-                                <option value="@supplier.SupplierId">@supplier.CompanyName</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="fs-5 mb-2">
-                        <div class="d-inline-block">
-                            <div class="fw-bold">Quantity Per Unit</div>
-                            <input asp-for="@Model.Pizza!.QuantityPerUnit" class="form-control text-middle me-2 d-inline-block" maxlength="1" id="inputQuantity" type="number" style="max-width:3rem" />
-                            <div class="d-inline-block">Piece(s)</div>
+                    <div class="col-md-6 scrollable-div overflow-auto">
+                        <h1 class="display-5 mb-3">Update Pizza Details</h1>
+                        <div class="fs-5 mb-2">
+                            <div class="fw-bold">Name</div>
+                            <input asp-for="@Model.Pizza!.Name" class="form-control text-left me-3" type="text" />
                         </div>
-                        <div class="ms-5 d-inline-block">
-                            <div class="fw-bold">Price</div>
-                            <div class="d-inline-block">$</div>
-                            <input asp-for="@Model.Pizza!.UnitPrice" class="form-control text-middle me-2 d-inline-block" min="0" maxlength="3" id="inputQuantity" type="number" step=".01" style="max-width:6rem" />
+
+
+                        <div class="fs-5 mb-2">
+                            <div class="fw-bold">Category</div>
+                            <select asp-for="@Model.Pizza!.CategoryId" class="form-select">
+                                @foreach (var category in Model.Categories!)
+                                {
+                                    <option value="@category.CategoryId">@category.CategoryName</option>
+                                }
+                            </select>
                         </div>
-                    </div>
-                    <div class="fs-5 mb-2">
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary align-text-bottom width"
-                                type="submit" asp-page-handler="UpdatePizza">
-                            Update
-                        </button>
+                        <div class="fs-5 mb-2">
+                            <div class="fw-bold">Supplier</div>
+                            <select class="form-select" asp-for="@Model.Pizza!.SupplierId">
+                                @foreach (var supplier in Model.Suppliers!)
+                                {
+                                    <option value="@supplier.SupplierId">@supplier.CompanyName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="fs-5 mb-2">
+                            <div class="d-inline-block">
+                                <div class="fw-bold">Quantity Per Unit</div>
+                                <input asp-for="@Model.Pizza!.QuantityPerUnit" class="form-control text-middle me-2 d-inline-block" maxlength="1" id="inputQuantity" type="number" style="max-width:3rem" />
+                                <div class="d-inline-block">Piece(s)</div>
+                            </div>
+                            <div class="ms-5 d-inline-block">
+                                <div class="fw-bold">Price</div>
+                                <div class="d-inline-block">$</div>
+                                <input asp-for="@Model.Pizza!.UnitPrice" class="form-control text-middle me-2 d-inline-block" min="0" maxlength="3" id="inputQuantity" type="number" step=".01" style="max-width:6rem" />
+                            </div>
+                        </div>
+                        <div class="fs-5 mb-2">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary align-text-bottom width"
+                            type="submit" asp-page-handler="UpdatePizza">
+                                Update
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-</section>
+            </form>
+        </div>
+    </section>
+}
+else
+{
+    HttpContext.Response.Redirect("/");
+}
 <script>
     function previewImage(input) {
         if (input.files && input.files[0]) {
@@ -78,3 +89,17 @@
         }
     }
 </script>
+@{
+    void GetLoggedInAccount()
+    {
+        string accountFromSession = HttpContext.Session.GetString("account")!;
+        if (accountFromSession != null)
+            accountDTO = JsonConvert.DeserializeObject<AccountDTO>(accountFromSession)!;
+    }
+    bool IsStaff()
+    {
+        if (accountDTO != null && accountDTO.Type!.Equals("1")) return true;
+        return false;
+    }
+
+}

@@ -15,9 +15,11 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl
     public class CategoryService : ICategoryService
     {              
         private GetAllCategoriesService? _getAllCategoriesService; 
-        private InsertCategoryByNewPizzaDTOService? _insertCategoryByPizzaDTOService;    
-        public CategoryService()
+        private InsertCategoryByNewPizzaDTOService? _insertCategoryByPizzaDTOService;
+        private IUnitOfWork _unitOfWork;
+        public CategoryService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         
@@ -31,8 +33,8 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl
         //}
         private void InitializeObjects()
         {
-            _getAllCategoriesService = new GetAllCategoriesService();
-            _insertCategoryByPizzaDTOService = new InsertCategoryByNewPizzaDTOService();
+            _getAllCategoriesService = new GetAllCategoriesService(_unitOfWork);
+            _insertCategoryByPizzaDTOService = new InsertCategoryByNewPizzaDTOService(_unitOfWork);
 
         }
        

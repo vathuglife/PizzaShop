@@ -1,21 +1,19 @@
-using DaoVietAnh.Asm2.Repo.Services;
-using DaoVietAnh.Asm2.Repo.Services.Implementation.AccountServiceImpl;
-using DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl;
-using DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl;
-using DaoVietAnh.Asm2.Repo.Services.Implementation.SupplierServiceImpl;
+using DaoVietAnh.Asm2.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<IAccountService,AccountService>();
-builder.Services.AddScoped<IPizzaService, PizzaService>();
-builder.Services.AddScoped<ISupplierService,SupplierService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddUnitOfWork();
+builder.Services.AddDatabase();
+builder.Services.AddServices();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
+
+
 
 builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 var app = builder.Build();

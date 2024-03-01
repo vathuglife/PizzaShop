@@ -41,5 +41,22 @@ namespace DaoVietAnh.Asm2.Repo.Mappers
                         => option.MapFrom(source => source.Type))
            );
         }
+        public static MapperConfiguration AccountToMemberDTOMap()
+        {
+            return new MapperConfiguration(config =>
+               config.CreateMap<Account, MemberDTO>()
+               .ForMember(destination => destination.MemberId,
+                       option=> option.MapFrom(source => source.AccountId))
+               .ForMember(destination => destination.Username,
+                       option=> option.MapFrom(source => source.UserName))
+                 .ForMember(destination => destination.FullName,
+                    option
+                        => option.MapFrom(source => source.FullName))
+               .ForMember(destination => destination.Type,
+                    option
+                        => option.MapFrom(source => source.Type))
+           );
+        }
+
     }
 }

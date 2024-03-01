@@ -5,10 +5,12 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
 {
     public class DeletePizzaByIdService
     {
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private Product? _pizza;
         private int  _id;
-        public DeletePizzaByIdService() { InitializeObjects(); }
+        public DeletePizzaByIdService(IUnitOfWork unitOfWork) {
+            _unitOfWork = unitOfWork;
+        }
         public void Delete(int id)
         {
             _id = id;
@@ -23,11 +25,6 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
         {
             _unitOfWork!.ProductRepository!.Delete(_pizza!);
             _unitOfWork.Save();
-        }
-        private void InitializeObjects()
-        {
-            _unitOfWork = new UnitOfWork();
-
-        }
+        }      
     }
 }

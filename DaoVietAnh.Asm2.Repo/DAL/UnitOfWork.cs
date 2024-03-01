@@ -2,106 +2,91 @@
 
 namespace DaoVietAnh.Asm2.Repo.DAL
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-
-        private ShoppingWebsiteDBContext? _dbContext = new ShoppingWebsiteDBContext();
+        private readonly ShoppingWebsiteDBContext? _dbContext;
         private bool disposed = false;
-        private GenericRepository<Account>? _accountRepository;
-        private GenericRepository<Category>? _categoryRepository;
-        private GenericRepository<Customer>? _customerRepository;
-        private GenericRepository<Order>? _orderRepository;
-        private GenericRepository<OrderDetail>? _orderDetailRepository;
-        private GenericRepository<Product>? _productRepository;
-        private GenericRepository<Supplier>? _supplierRepository;
+        private IGenericRepository<Account>? _accountRepository;
+        private IGenericRepository<Category>? _categoryRepository;
+        private IGenericRepository<Customer>? _customerRepository;
+        private IGenericRepository<Order>? _orderRepository;
+        private IGenericRepository<OrderDetail>? _orderDetailRepository;
+        private IGenericRepository<Product>? _productRepository;
+        private IGenericRepository<Supplier>? _supplierRepository;
 
-        public ShoppingWebsiteDBContext? DbContext { get => _dbContext; set => _dbContext = value; }
-        public bool Disposed { get => disposed; set => disposed = value; }
-        public GenericRepository<Account>? AccountRepository
+        public UnitOfWork(ShoppingWebsiteDBContext dbContext)
         {
-            get
-                {
-                if (_accountRepository == null)
-                {
-                    _accountRepository = new GenericRepository<Account>(_dbContext!);
-                }
-                return _accountRepository;
-            }
-            set => _accountRepository = value;
+            _dbContext = dbContext;
         }
-        public GenericRepository<Category>? CategoryRepository {
-            get
-            {
-                if (_categoryRepository == null)
-                {
-                    _categoryRepository = new GenericRepository<Category>(_dbContext!);
-                }
-                return _categoryRepository;
-            } set => _categoryRepository = value; }
-        public GenericRepository<Customer>? CustomerRepository {
-            get
-            {
-                if (_customerRepository == null)
-                {
-                    _customerRepository = new GenericRepository<Customer>(_dbContext!);
-                }
-                return _customerRepository;
-            } set => _customerRepository = value; }
-        public GenericRepository<Order>? OrderRepository {
-            get
-            {
-                if (_orderRepository == null)
-                {
-                    _orderRepository = new GenericRepository<Order>(_dbContext!);
-                }
-                return _orderRepository;
-            } set => _orderRepository = value; }
-        public GenericRepository<OrderDetail>? OrderDetailRepository {
-            get
-            {
-                if (_orderDetailRepository == null)
-                {
-                    _orderDetailRepository = new GenericRepository<OrderDetail>(_dbContext!);
-                }
-                return _orderDetailRepository;
-            } set => _orderDetailRepository = value; }
-        public GenericRepository<Product>? ProductRepository
+
+        public IGenericRepository<Account> AccountRepository
         {
             get
             {
-                if (_productRepository == null)
-                {
-                    _productRepository = new GenericRepository<Product>(_dbContext!);
-                }
-                return _productRepository;
+                return _accountRepository ??= new GenericRepository<Account>(_dbContext!);
             }
-            set => _productRepository = value; }
-        public GenericRepository<Supplier>? SupplierRepository
+        }
+
+        public IGenericRepository<Product> ProductRepository
         {
             get
             {
-                if (_supplierRepository == null)
-                {
-                    _supplierRepository = new GenericRepository<Supplier>(_dbContext!);
-                }
-                return _supplierRepository;
+                return _productRepository ??= new GenericRepository<Product>(_dbContext!);
             }
-            set => _supplierRepository = value; }
-        
+        }
+
+        public IGenericRepository<Customer> CustomerRepository
+        {
+            get
+            {
+                return _customerRepository ??= new GenericRepository<Customer>(_dbContext!);
+            }
+        }
+
+        public IGenericRepository<Category> CategoryRepository
+        {
+            get
+            {
+                return _categoryRepository ??= new GenericRepository<Category>(_dbContext!);
+            }
+        }
+        public IGenericRepository<Order> OrderRepository
+        {
+            get
+            {
+                return _orderRepository ??= new GenericRepository<Order>(_dbContext!);
+            }
+        }
+        public IGenericRepository<OrderDetail> OrderDetailRepository
+        {
+            get
+            {
+                return _orderDetailRepository ??= new GenericRepository<OrderDetail>(_dbContext!);
+            }
+        }
+        public IGenericRepository<Supplier> SupplierRepository
+        {
+            get
+            {
+                return _supplierRepository ??= new GenericRepository<Supplier>(_dbContext!);
+            }
+        }
         public void Save()
         {
-            _dbContext?.SaveChanges();
+            _dbContext!.SaveChanges();
         }
+
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!Disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
-                    DbContext?.Dispose();
+                    _dbContext!.Dispose();
                 }
+                disposed = true;
             }
-            Disposed = true;
         }
 
         public void Dispose()

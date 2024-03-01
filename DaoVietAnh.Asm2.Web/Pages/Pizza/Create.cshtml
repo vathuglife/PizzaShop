@@ -1,76 +1,90 @@
 ﻿@page
 @model DaoVietAnh.Asm2.Web.Pages.Pizza.CreateModel
-@{
-}
+@using DaoVietAnh.Asm2.Repo.DTO
+@using Newtonsoft.Json
 @Html.AntiForgeryToken()
+@{
+    AccountDTO? accountDTO = null!;
+    GetLoggedInAccount();
+}
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
 </head>
-<section class="py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6">
-                <div id="imageContainer">
-                    <img id="imagePreview" src="/resources/images/add-image.png" alt="Preview" style="max-width: 480px; max-height: 400px;" class="rounded" />
-                </div>
-                <input type="file" id="Image" class="form-control-file" accept="image/*" onchange="previewImage(this)" style="display: none;" />
-                <button type="button" class="btn btn-secondary" onclick="$('#Image').click()">Choose Image</button>
-                <input type="hidden" id="imageData" />
-            </div>
 
-            <div class="col-md-6 scrollable-div overflow-auto">
-                <h1 class="display-5 mb-3">Pizza Details</h1>
-                <div class="fs-5 mb-2">
-                    <div class="fw-bold">Name</div>
-                    <input id="pizzaNameInput" class="form-control text-left me-3" type="text" />
-                </div>
+@if (IsStaff())
+{
 
-            
-
-                <div class="fs-5 mb-2">
-                    <div class="fw-bold">Category</div>
-                    <select id="categoryIdInput" class="form-select">
-                        @foreach (var category in Model.Categories!)
-                        {
-                            <option value="@category.CategoryId">@category.CategoryName</option>
-                        }
-                    </select>
-                </div>
-                <div class="fs-5 mb-2">
-                    <div class="fw-bold">Supplier</div>
-                    <select id="supplierIdInput" class="form-select">
-                        @foreach (var supplier in Model.Suppliers!)
-                        {
-                            <option value="@supplier.SupplierId">@supplier.CompanyName</option>
-                        }
-                    </select>
-                </div>
-                <div class="fs-5 mb-2">
-                    <div class="d-inline-block">
-                        <div class="fw-bold">Quantity Per Unit</div>
-                        <input id="quantityPerUnitInput" class="form-control text-middle me-2 d-inline-block" maxlength="1" id="inputQuantity" type="number" style="max-width:3rem" />
-                        <div class="d-inline-block">Piece(s)</div>
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">
+                    <div id="imageContainer">
+                        <img id="imagePreview" src="/resources/images/add-image.png" alt="Preview" style="max-width: 480px; max-height: 400px;" class="rounded" />
                     </div>
-                    <div class="ms-5 d-inline-block">
-                        <div class="fw-bold">Price</div>
-                        <div class="d-inline-block">$</div>
-                        <input id="unitPriceInput" class="form-control text-middle me-2 d-inline-block" min="0" maxlength="3" id="inputQuantity" type="number" step=".01" style="max-width:6rem" />
+                    <input type="file" id="Image" class="form-control-file" accept="image/*" onchange="previewImage(this)" style="display: none;" />
+                    <button type="button" class="btn btn-secondary" onclick="$('#Image').click()">Choose Image</button>
+                    <input type="hidden" id="imageData" />
+                </div>
+
+                <div class="col-md-6 scrollable-div overflow-auto">
+                    <h1 class="display-5 mb-3">Pizza Details</h1>
+                    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Name</div>
+                        <input id="pizzaNameInput" class="form-control text-left me-3" type="text" />
                     </div>
-                </div>
-                <div class="fs-5 mb-2">
-                </div>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary align-text-bottom width"                            
-                            id="createPizzaButton">
-                        Create
-                    </button>
+
+
+
+                    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Category</div>
+                        <select id="categoryIdInput" class="form-select">
+                            @foreach (var category in Model.Categories!)
+                            {
+                                <option value="@category.CategoryId">@category.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="fs-5 mb-2">
+                        <div class="fw-bold">Supplier</div>
+                        <select id="supplierIdInput" class="form-select">
+                            @foreach (var supplier in Model.Suppliers!)
+                            {
+                                <option value="@supplier.SupplierId">@supplier.CompanyName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="fs-5 mb-2">
+                        <div class="d-inline-block">
+                            <div class="fw-bold">Quantity Per Unit</div>
+                            <input id="quantityPerUnitInput" class="form-control text-middle me-2 d-inline-block" maxlength="1"  type="number" style="max-width:3rem" />
+                            <div class="d-inline-block">Piece(s)</div>
+                        </div>
+                        <div class="ms-5 d-inline-block">
+                            <div class="fw-bold">Price</div>
+                            <div class="d-inline-block">$</div>
+                            <input id="unitPriceInput" class="form-control text-middle me-2 d-inline-block" min="0" maxlength="3" type="number" step=".01" style="max-width:6rem" />
+                        </div>
+                    </div>
+                    <div class="fs-5 mb-2">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary align-text-bottom width"
+                                id="createPizzaButton">
+                            Create
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+else
+{
+    HttpContext.Response.Redirect("/");
+}
 
 <!-- Create Pizza Success Modal -->
 <div class="modal fade" id="successfulPizzaInsertion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,7 +92,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Info</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 The pizza is successfully created.
@@ -97,17 +111,17 @@
             var reader = new FileReader();
             reader.onload = function (e) {
                 $('#imagePreview').attr('src', e.target.result).show();
-                $('#imageData').val(e.target.result); 
+                $('#imageData').val(e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
-    $(document).ready(function () {       
-        $('#createPizzaButton').click(function () {                        
-            $('#createPizzaButton').prop('disabled',true)
+    $(document).ready(function () {
+        $('#createPizzaButton').click(function () {
+            $('#createPizzaButton').prop('disabled', true)
             var pizzaDTO = {
                 Name: $('#pizzaNameInput').val(),
-                SupplierId: $('#supplierIdInput').val(),                
+                SupplierId: $('#supplierIdInput').val(),
                 CategoryId: $('#categoryIdInput').val(),
                 QuantityPerUnit: $('#quantityPerUnitInput').val(),
                 UnitPrice: $('#unitPriceInput').val(),
@@ -124,9 +138,9 @@
                         $('input:hidden[name="__RequestVerificationToken"]').val());
                 },
                 success: function (response) {
-                    
+
                     $('#successfulPizzaInsertion').modal('show');
-                     
+
                 },
                 error: function (xhr, status, error) {
                     // Handle AJAX error if needed
@@ -140,3 +154,18 @@
         });
     });
 </script>
+
+@{
+    void GetLoggedInAccount()
+    {
+        string accountFromSession = HttpContext.Session.GetString("account")!;
+        if (accountFromSession != null)
+            accountDTO = JsonConvert.DeserializeObject<AccountDTO>(accountFromSession)!;
+    }
+    bool IsStaff()
+    {
+        if (accountDTO != null && accountDTO.Type!.Equals("1")) return true;
+        return false;
+    }
+
+}

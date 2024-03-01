@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace DaoVietAnh.Asm2.Repo.DAL
 {
-    public class GenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         internal ShoppingWebsiteDBContext context;
         internal DbSet<TEntity> dbSet;
@@ -12,13 +12,15 @@ namespace DaoVietAnh.Asm2.Repo.DAL
         public GenericRepository(ShoppingWebsiteDBContext context)
         {
             this.context = context;
-            dbSet = context.Set<TEntity>();
+            this.dbSet = context.Set<TEntity>();
         }
 
         public virtual IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            string includeProperties = "")
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "",
+            int? pageIndex = null,
+            int? pageSize = null)
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -35,18 +37,25 @@ namespace DaoVietAnh.Asm2.Repo.DAL
 
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                query = orderBy(query);
             }
-            else
+
+            if (pageIndex.HasValue && pageSize.HasValue)
             {
-                return query.ToList();
+                int validPageIndex = pageIndex.Value > 0 ? pageIndex.Value - 1 : 0;
+                int validPageSize = pageSize.Value > 0 ? pageSize.Value : 10;
+
+                query = query.Skip(validPageIndex * validPageSize).Take(validPageSize);
             }
+
+            return query.ToList();
         }
 
         public virtual TEntity GetByID(object id)
         {
-            return dbSet.Find(id)!;
-        }       
+            return dbSet.Find(id);
+        }
+
         public virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
@@ -54,7 +63,7 @@ namespace DaoVietAnh.Asm2.Repo.DAL
 
         public virtual void Delete(object id)
         {
-            TEntity entityToDelete = dbSet.Find(id)!;
+            TEntity entityToDelete = dbSet.Find(id);
             Delete(entityToDelete);
         }
 
@@ -72,6 +81,5 @@ namespace DaoVietAnh.Asm2.Repo.DAL
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
-       
     }
 }

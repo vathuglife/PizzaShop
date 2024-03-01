@@ -14,11 +14,12 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl
 {
     public class GetAllCategoriesService
     {
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private List<Category>? _categories;
         private List<CategoryDTO>? _categoryDTOs;
         private Mapper? _mapper;
-        public GetAllCategoriesService() {
+        public GetAllCategoriesService(IUnitOfWork unitOfWork) {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public CategoryServiceResponse GetCategories()
@@ -28,8 +29,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.CategoryServiceImpl
             return GetSuccessfulRetrievalResult();
         }
         private void InitializeObjects()
-        {
-            _unitOfWork = new UnitOfWork();
+        {            
             _mapper = new Mapper(CategoryMapper.CategoryToCategoryDTOMap());
             _categoryDTOs = new List<CategoryDTO>();
             

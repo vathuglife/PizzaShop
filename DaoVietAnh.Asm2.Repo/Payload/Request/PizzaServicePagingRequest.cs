@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DaoVietAnh.Asm2.Repo.Payload.Request
 {
-    public class PizzaServicePagingParameters
+    public class PizzaServicePagingRequest
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

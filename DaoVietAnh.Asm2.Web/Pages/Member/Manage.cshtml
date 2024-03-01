@@ -1,35 +1,33 @@
 ﻿@page
 @using DaoVietAnh.Asm2.Repo.DTO
 @using Newtonsoft.Json
-@model Pizza.ManageModel
+@model Member.ManageModel
 @Html.AntiForgeryToken()
 
 @{
     AccountDTO? accountDTO = null!;
     GetLoggedInAccount();
 }
-
-
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
 </head>
-@if (IsStaff())
-{
-    <body>
+<body>
+    @if (IsStaff())
+    {
+
+
         <div class="container margin-top-from-navbar">
-            <h1 class="display-5 mb-5">Pizza Management</h1>
+            <h1 class="display-5 mb-5">Member Management</h1>
 
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">No.</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Category</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Options</th>
 
                     </tr>
@@ -37,17 +35,13 @@
                 <tbody>
                     @{
                         int no = 1;
-                        foreach (PizzaDTO pizzaDTO in Model.PizzaDTOs!)
+                        foreach (MemberDTO memberDTO in Model.MemberDTOs!)
                         {
                             <tr>
                                 <th scope="row">@no</th>
-                                <td>@pizzaDTO.Name</td>
-                                <td>@pizzaDTO.Price</td>
-                                <td>@pizzaDTO.Description</td>
-                                <td>
-                                    <img src="@pizzaDTO.Image" width="180" height="100" class="rounded" />
-                                </td>
-                                <td>@pizzaDTO.Category</td>
+                                <td>@memberDTO.Username</td>
+                                <td>@memberDTO.FullName</td>
+                                <td>@memberDTO.Type</td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,14 +49,14 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <form method="post">
-                                                <input type="hidden" name="pizzaId" value="@pizzaDTO.Id" />
+                                                <input type="hidden" name="memberId" value="@memberDTO.MemberId" />
                                                 <button class="dropdown-item" asp-page-handler="UpdatePizza" type="submit">Update</button>
                                             </form>
                                             <!-- Button trigger modal
                                             Here, data-target triggers the Modal.
                                             -->
                                             <button class="dropdown-item" data-bs-toggle="modal"
-                                            data-bs-target="#confirmDeleteModal" data-pizza-id="@pizzaDTO.Id">
+                                                    data-bs-target="#confirmDeleteModal" data-member-id="@memberDTO.MemberId">
                                                 Delete
                                             </button>
 
@@ -90,63 +84,64 @@
             </div>
         </div>
 
-
-        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm delete</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Do you really want to delete this Pizza? This action is irreversible!
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="confirmDeleteButton" onclick="$('#confirmDeleteModal').modal('hide');">
-                            Yes
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="$('#confirmDeleteModal').modal('hide');">No</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Delete Success Modal -->
-        <div class="modal fade" id="deleteSuccessModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Info</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    }
+    else
+    {
+        HttpContext.Response.Redirect("/");
+    }
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm delete</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        The pizza was successfully deleted.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="$('#deleteSuccessModal').modal('hide');">Ok</button>
-                    </div>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Do you really want to delete this Pizza? This action is irreversible!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton" onclick="$('#confirmDeleteModal').modal('hide');">
+                        Yes
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="$('#confirmDeleteModal').modal('hide');">No</button>
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Delete Success Modal -->
+    <div class="modal fade" id="deleteSuccessModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Info</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <span aria-hidden="true">&times;</span>
+                </div>
+                <div class="modal-body">
+                    The pizza was successfully deleted.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="$('#deleteSuccessModal').modal('hide');">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-    </body>
-}
-else
-{
-    HttpContext.Response.Redirect("/");
-}
+</body>
+
+
 
 <!-- Delete Pizza AJAX Script. Runs when the Delete Modal is shown.-->
 <script>
     $(document).ready(function () {
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
-            var pizzaId = button.data('pizza-id'); // Extract pizza ID from data attribute
+            var memberId = button.data('member-id'); // Extract pizza ID from data attribute
             var modal = $(this);
-            console.log("Selected Pizza Id: " + pizzaId);
+            console.log("Selected Pizza Id: " + memberId);
 
             // When confirm button in modal is clicked
             modal.find('#confirmDeleteButton').on('click', function () {
@@ -159,7 +154,7 @@ else
                     },
                     url: "?handler=DeletePizza",
                     type: 'POST',
-                    data: { id: pizzaId },
+                    data: { id: memberId },
                     success: function (data) {
                         $('#deleteSuccessModal').modal('show');
                     },

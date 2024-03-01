@@ -17,13 +17,14 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
 {
     public class GetUpdatePizzaByIdService
     {
-        private UnitOfWork? _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
         private UpdatePizzaDTO? _updatePizzaDTO;
         private Product? _pizza;
         private Mapper? _mapper;
         private int _id;
-        public GetUpdatePizzaByIdService()
+        public GetUpdatePizzaByIdService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
         public PizzaServiceResponse Get(int id)
@@ -34,8 +35,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
             return GetSuccessfulPizzaRetrievalResult();
         }
         private void InitializeObjects()
-        {
-            _unitOfWork = new UnitOfWork();
+        {            
             _mapper = new Mapper(PizzaMapper.PizzaProductToUpdatePizzaDTO());
         }
         private void GetPizzaFromDbById()

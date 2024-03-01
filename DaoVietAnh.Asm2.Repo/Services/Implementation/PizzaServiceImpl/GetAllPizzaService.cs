@@ -17,13 +17,14 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
     {
         private IEnumerable<Product>? _pizzas;
         private List<PizzaDTO>? _pizzasDTOs;
-        private UnitOfWork? _unitOfWork;
-        private PizzaServicePagingParameters? _pageConfig;
-        public GetAllPizzaService()
+        private IUnitOfWork? _unitOfWork;
+        private PizzaServicePagingRequest? _pageConfig;
+        public GetAllPizzaService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             InitializeObjects();
         }
-        public async Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingParameters pageConfig)
+        public async Task<PizzaServiceResponse> GetAllPizzas(PizzaServicePagingRequest pageConfig)
         {
             await Task.Run(() =>
             {
@@ -36,8 +37,7 @@ namespace DaoVietAnh.Asm2.Repo.Services.Implementation.PizzaServiceImpl
         }
         
         private void InitializeObjects()
-        {
-            _unitOfWork = new UnitOfWork();
+        {            
             _pizzasDTOs = new List<PizzaDTO>();
         }
         private void GetAvailablePizzasFromDb()
