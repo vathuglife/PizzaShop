@@ -7,6 +7,8 @@ using DaoVietAnh.Asm2.Repo.Services.Implementation.SupplierServiceImpl;
 using DaoVietAnh.Asm2.Repo.Services;
 using Microsoft.EntityFrameworkCore;
 using DaoVietAnh.Asm2.Repo.Services.Implementation.MemberServiceImpl;
+using DaoVietAnh.Asm2.Repo.Services.Implementation.OrderServiceImpl;
+
 
 namespace DaoVietAnh.Asm2.Web.Extensions
 {
@@ -30,6 +32,7 @@ namespace DaoVietAnh.Asm2.Web.Extensions
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IOrderService, OrderService>();
             return services;
         }
 

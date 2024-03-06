@@ -1,27 +1,42 @@
 ﻿@page
 @model DaoVietAnh.Asm2.Web.Pages.Pizza.DetailsModel
-@{
-}
-
+@Html.AntiForgeryToken()
 <h1>SelectedPizza Details</h1>
-
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+</head>
 
 <body>
-      <!-- Product section-->
+    <!-- Product section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0 rounded" src="@Model.SelectedPizza!.Image" alt="..." /></div>
-                <div class="col-md-6">                    
+                <input type="hidden" value="@Model.SelectedPizza?.Id" id="pizzaId" />
+                <div class="col-md-6">
+                    <img class="card-img-top mb-5 mb-md-0 rounded"
+                         src="@Model.SelectedPizza!.Image" alt="..." />
+                    <input id="pizzaImage" type="hidden" value="@Model.SelectedPizza!.Image" />
+                </div>
+                <div class="col-md-6">
                     <h1 class="display-5 fw-bolder">@Model.SelectedPizza?.Name</h1>
-                    <div class="fs-5 mb-5">                        
-                        <span>$@Model.SelectedPizza?.Price</span>
+                    <input id="pizzaName" type="hidden" value="@Model.SelectedPizza!.Name" />
+
+                    <div class="fs-5 mb-5">
+                        <span>@Model.SelectedPizza?.Category</span>
+                        <input id="pizzaCategory" type="hidden" value="@Model.SelectedPizza!.Category" />
                     </div>
-                    <p class="lead">
+                    <div class="fs-5 mb-5">
+                        <span>$@Model.SelectedPizza?.Price</span>
+                        <input id="pizzaPrice" type="hidden" value="@Model.SelectedPizza!.Price" />
+                    </div>
+                    <p class="lead" >
                         @Model.SelectedPizza?.Description
+                        <input id="pizzaDesc" type="hidden" value="@Model.SelectedPizza!.Description" />
                     </p>
                     <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />                        
+                        <input class="form-control text-center me-3" id="inputQuantity" type="number" value="1" style="max-width: 3rem" />
                         @{
                             if (HttpContext.Session.GetString("account") == null)
                             {
@@ -29,13 +44,72 @@
                             }
                             else
                             {
-                                <a href="" class="btn btn-primary align-text-bottom">Add to cart</a>
+                                <button id="addToCartButton" class="btn btn-primary align-text-bottom">Add to cart</button>
                             }
                         }
                     </div>
                 </div>
             </div>
+
         </div>
-    </section>       
+    </section>
 </body>
+<!-- Add To Cart Success Modal -->
+<div class="modal fade" id="addToCartSuccessfulModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                The pizza is successfully added to cart.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#addToCartButton').click(function () {            
+            var pizzaDTO = {
+                Id: $('#pizzaId').val(),
+                Name: $('#pizzaName').val(),
+                Category: $('#pizzaCategory').val(),
+                Description: $('#pizzaDesc').val(),
+                Price: $('#pizzaPrice').val(),
+                Image: $('#pizzaImage').val()
+            };
+
+            $.ajax({
+                url: '?handler=AddToCart',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(pizzaDTO),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function (response) {
+
+            $('#addToCartSuccessfulModal').modal('show');
+
+                },
+                error: function (xhr, status, error) {
+                    // handle ajax error if needed
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $('#addToCartSuccessfulModal').on('hidden.bs.modal', function (e) {
+            location.reload();
+        });
+    });
+</script>
 

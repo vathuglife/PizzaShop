@@ -21,12 +21,13 @@ namespace DaoVietAnh.Asm2.Web.Pages.Account
         public string? PopupMsg { get; set; }
         
         private readonly IAccountService _accountService;
+        
         private Dictionary<AccountServiceEnum, Action>? _loginAccountCases;
         private AccountServiceResponse? _accountServiceResult;
         private string? _endpoint;
         public LoginModel(IAccountService accountService)
         {
-            _accountService = accountService;
+            _accountService = accountService;            
             InitializeObjects();
         }
 
@@ -58,12 +59,22 @@ namespace DaoVietAnh.Asm2.Web.Pages.Account
         }
         public void HandleSuccessfulLogin()
         {
-            HttpContext.Session.SetString("account", GetSerializedAccountDTO());
+            InitializeAccountSession();
             _endpoint = "/Index";
-        }        
+        }
+        private void InitializeAccountSession()
+        {
+            HttpContext.Session.SetString("account", GetSerializedAccountDTO());
+            HttpContext.Session.SetString("cart", GetSerializedCart());
+        }
         private string GetSerializedAccountDTO()
         {            
             return JsonConvert.SerializeObject((AccountDTO)_accountServiceResult!.ReturnData!);            
         }
+        private string GetSerializedCart()
+        {
+            List<PizzaDTO> cart = new List<PizzaDTO>();
+            return JsonConvert.SerializeObject(cart);
+        }               
     }
 }

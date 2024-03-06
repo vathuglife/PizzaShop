@@ -26,11 +26,23 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                    @if (IsGuest() || IsMember())
+                    @if (IsGuest())
                     {
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Index">Hottest Pizzas</a>
+                            </li>
+                        </ul>
+                    }
+                    else if (IsMember())
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Hottest Pizzas</a>
+
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Member/Cart">My Cart</a>
                             </li>
                         </ul>
                     }
@@ -46,11 +58,11 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <a class="dropdown-item" href="/Pizza/Create">Create Pizza</a>
-                                    <a class="dropdown-item" href="/Pizza/Manage">Manage Pizzas</a>                                    
+                                    <a class="dropdown-item" href="/Pizza/Manage">Manage Pizzas</a>
                                 </div>
                             </li>
                         </ul>
-                       
+
                     }
 
 
@@ -60,8 +72,8 @@
             @{
                 if (accountDTO == null)
                 {
-                    <div class="container d-flex justify-content-end">
-                        <ul class="navbar-nav ml-auto">
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                        <ul class="navbar-nav flex-grow">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Login</a>
                             </li>
@@ -75,8 +87,11 @@
                 else
                 {
                     <div class="container d-flex justify-content-end">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item mr-1">Welcome back <div /> @accountDTO.FullName</li>
+                        <ul class="navbar-nav flex-grow">
+                            <li class="nav-item mr-5">
+                                <div>Welcome back </div>
+                                <div class="fw-bold"> @accountDTO.FullName</div>
+                            </li>
                             <li class="nav-item">
                                 <a class="btn btn-primary" asp-page="/Account/Logout">Logout</a>
                             </li>
@@ -101,7 +116,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>    
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 

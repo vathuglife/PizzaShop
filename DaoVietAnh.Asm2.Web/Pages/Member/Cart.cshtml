@@ -1,0 +1,199 @@
+﻿@page
+@using DaoVietAnh.Asm2.Repo.DTO
+@using Newtonsoft.Json
+@model DaoVietAnh.Asm2.Web.Pages.Member.CartModel
+@{
+}
+@Html.AntiForgeryToken()
+
+@{
+    AccountDTO? accountDTO = null!;
+    GetLoggedInAccount();
+}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    @if (IsMember())
+    {
+        <div class="container margin-top-from-navbar">
+            <h1 class="display-5 mb-5">My Cart</h1>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Options</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no = 1;
+                        foreach (PizzaDTO pizzaDTO in Model.Cart!)
+                        {
+                            <tr>
+                                <th scope="row">@no</th>
+                                <td>@pizzaDTO.Name</td>
+                                <td>@pizzaDTO.Category</td>
+                                <td>@pizzaDTO.Description</td>
+                                <td>@pizzaDTO.Price</td>
+                                <td>
+                                    <img src="@pizzaDTO.Image" width="180" height="100" class="rounded" />
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu">
+                                        <!--
+                                        <form method="post">
+                                                <input type="hidden" name="memberId" value="@pizzaDTO.Id" />
+                                                <button class="dropdown-item" asp-page-handler="UpdatePizza" type="submit">Update</button>
+                                            </form>
+                                                -->
+                                            <!-- Button trigger modal
+                                            Here, data-target triggers the Modal.
+                                            -->
+                                            <button class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#confirmRemoveModal" data-pizza-id="@pizzaDTO.Id">
+                                                Remove from Cart
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </td>
+                                @Html.AntiForgeryToken()
+                            </tr>
+                            no++;
+                        }
+                    }
+
+                </tbody>
+            </table>
+            <div>
+                <button class="btn btn-primary float-right">Place an Order</button>
+            </div>
+            <div class="mt-5">
+                <ul class="pagination">
+                    @for (var i = 1; i <= Model.TotalCount; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="?pageNumber=@i">@i</a>
+                        </li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        HttpContext.Response.Redirect("/");
+    }
+</body>
+<!-- Remove From Cart Confirm Modal -->
+<div class="modal fade" id="confirmRemoveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm remove</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you really want to remove this from your Cart?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton" onclick="$('#confirmRemoveModal').modal('hide');">
+                    Yes
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="$('#confirmRemoveModal').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Remove From Cart Success Modal -->
+<div class="modal fade" id="removeFromCartSuccessModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                The pizza is successfully removed from cart.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#confirmRemoveModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var pizzaId = button.data('pizza-id'); // Extract pizza ID from data attribute
+            var modal = $(this);
+            console.log("Selected Pizza Id: " + pizzaId);
+
+            // When confirm button in modal is clicked
+            modal.find('#confirmDeleteButton').on('click', function () {
+                // Send AJAX request to backend with pizza ID
+                console.log("Delete button is clicked!")
+                $.ajax({
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    url: "?handler=RemoveFromCart",
+                    type: 'POST',
+                    data: { id: pizzaId },
+                    success: function (data) {
+                        $('#removeFromCartSuccessModal').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(status)
+                        console.log(error)
+                    }
+                });
+            });
+        });
+    });
+    $(document).ready(function () {
+        $('#removeFromCartSuccessModal').on('hidden.bs.modal', function (e) {
+            location.reload();
+        });
+    });
+</script>
+
+
+    
+@{
+    void GetLoggedInAccount()
+    {
+        string accountFromSession = HttpContext.Session.GetString("account")!;
+        if (accountFromSession != null)
+            accountDTO = JsonConvert.DeserializeObject<AccountDTO>(accountFromSession)!;
+    }
+    bool IsMember()
+    {
+        if (accountDTO != null && accountDTO.Type!.Equals("0")) return true;
+        return false;
+    }
+
+}
